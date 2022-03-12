@@ -1,5 +1,7 @@
 import { Component } from 'react';
 
+import SearchBox from './components/search-box/search-box.component';
+import CardList from './components/card-list/card-list.component';
 import logo from './logo.svg';
 import './App.css';
 
@@ -9,35 +11,41 @@ class App extends Component{
     super();
 
     this.state = {
-      name: {firstName: 'Alexandra', lastName: 'Sirois'},
-      compagnie : 'Machinage Piche'
-    }
+      monsters:[],
+      searchField: ''
+    };
   }
 
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>Hi, i'm {this.state.name.firstName} {this.state.name.lastName} and I work at {this.state.compagnie}</p>
-          <button onClick={() => {
-            this.setState(
-              () => {
-                return {
-                  name : {firstName:'Un',lastName:'Oiseau'},
-                };
-              } ,
-              () => {
-                console.log(this.state);
-              }
-              );
-          }
-        }
-          >
-            Change name</button>
-        </header>
-      </div>
+  componentDidMount(){
+    fetch('https://jsonplaceholder.typicode.com/users')
+      .then((response) =>  response.json())
+      .then((users)=>this.setState(()=>{
+          return {monsters:users}
+      })
     );
+  }
+
+  onSearchChange = (event) => {
+    const searchField = event.target.value.toLocaleLowerCase();
+       this.setState (()=> {
+         return {searchField};
+    });
+  }
+
+
+  render() {
+
+    const {monsters,searchField} = this.state;
+    const {onSearchChange} = this;
+    const filteredMonsters = this.state.monsters.filter((monsters)=>{
+      return monsters.name.toLocaleLowerCase().includes(this.state.searchField);
+    });
+
+
+    return <div className="App">
+      <SearchBox onChangeHandler = {onSearchChange} placeholder = 'search monster' className='monster-search-box'/>
+      <CardList monsters={filteredMonsters}/>
+    </div>;
   }
  
 }
