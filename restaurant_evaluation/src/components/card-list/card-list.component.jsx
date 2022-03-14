@@ -2,9 +2,17 @@ import { Component } from "react";
 import './card-list.style.css'
 import Card from '../card/card.component.jsx'
 
-class CardList extends Component{
 
+const CardList = ({monsters}) => (
 
+        <div className='card-list'>
+            {monsters.map((monster) => {
+            return <Card monster = { monster }/>;
+            })}
+        </div>
+
+);
+/* class CardList extends Component{
     render(){
 
         const { monsters } = this.props
@@ -17,7 +25,7 @@ class CardList extends Component{
             </div>
         );
     }
-}
+} */
 
 
 export default CardList;
